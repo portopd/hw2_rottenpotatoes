@@ -8,14 +8,13 @@ class MoviesController < ApplicationController
 
   def index
     get_ratings
-    if !params.include?(:sort) && !params.include?(:ratings)
-      @sort_col = "id"
-      @filter_ratings = @all_ratings
-    else
-      @sort_col = params[:sort] unless params[:sort].nil? # retrieve sort column from additional params hash
-      @form_ratings = params[:ratings] unless params[:ratings].nil?
-      @filter_ratings = @form_ratings.keys unless @form_ratings.nil?
-    end
+    @sort_col = "id" if !params.include?(:sort)
+    @filter_ratings = @all_ratings if !params.include?(:ratings)
+    
+    @sort_col = params[:sort] unless params[:sort].nil? # retrieve sort column from additional params hash
+    @form_ratings = params[:ratings] unless params[:ratings].nil?
+    @filter_ratings = @form_ratings.keys unless @form_ratings.nil?
+    
     @movies = Movie.all(:order => @sort_col, :conditions => {:rating => @filter_ratings})
   end
 
