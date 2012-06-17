@@ -7,9 +7,13 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @sort_col = params[:sort] unless params[:sort].nil? # retrieve sort column from additional params hash
-    @movies = Movie.all(:order => @sort_col)
+    @sort_col = "id"
     get_ratings
+    @filter_ratings = @all_ratings
+
+    @sort_col = params[:sort] unless params[:sort].nil? # retrieve sort column from additional params hash
+    @filter_ratings = params[:ratings].keys unless params[:ratings].nil?
+    @movies = Movie.all(:order => @sort_col, :conditions => {:rating => @filter_ratings})
   end
 
   def new
