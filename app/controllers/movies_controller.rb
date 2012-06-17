@@ -7,14 +7,56 @@ class MoviesController < ApplicationController
   end
 
   def index
+    # order checking
+    default_flag = false
+    restful = true
+    if session[:sort].nil?
+      if !params.include?(:sort) 
+        @sort_col = "id"
+        default_flag = true
+      else
+        @sort_col = params[:sort]
+      end
+    else
+      if !params.include?(:sort)
+        @sort_col = session[:sort]
+        restful = false
+      else
+        @sort_col = params[:sort]
+      end
+    end
+    if !default_flag
+      session[:sort] = @sort_col 
+    end
+    
+    # filter checking
     get_ratings
-    @sort_col = "id" if !params.include?(:sort)
-    @filter_ratings = @all_ratings if !params.include?(:ratings)
-    
-    @sort_col = params[:sort] unless params[:sort].nil? # retrieve sort column from additional params hash
-    @form_ratings = params[:ratings] unless params[:ratings].nil?
-    @filter_ratings = @form_ratings.keys unless @form_ratings.nil?
-    
+    default_flag = false
+    if session[:ratings].nil?
+      if !params.include?(:ratings)
+        @filter_ratings = @all_ratings
+        default_flag = true
+      else
+        @form_ratings = params[:ratings]
+      end
+    else
+      if !params.include?(:ratings)
+        @form_ratings = session[:ratings]
+        restful = false
+      else
+        @form_ratings = params[:ratings]
+      end
+    end
+    if !default_flag
+      @filter_ratings = @form_ratings.keys
+      session[:ratings] = @form_ratings
+    end
+
+    if !restful
+      flash.keep
+      redirect_to movies_path(:sort => @sort_col, :ratings => @form_ratings)
+    end
+    p session
     @movies = Movie.all(:order => @sort_col, :conditions => {:rating => @filter_ratings})
   end
 
