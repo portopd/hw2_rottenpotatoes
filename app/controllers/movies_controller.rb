@@ -9,7 +9,7 @@ class MoviesController < ApplicationController
   def index
     @sort_col = params[:sort] unless params[:sort].nil? # retrieve sort column from additional params hash
     @movies = Movie.all(:order => @sort_col)
-    get_ratings unless !@all_ratings.nil?
+    get_ratings
   end
 
   def new
@@ -41,6 +41,7 @@ class MoviesController < ApplicationController
   end
 
   def get_ratings
+    @all_ratings = []
     movies_diff_ratings = Movie.all(:group => "rating")
     movies_diff_ratings.each do |movie|
       @all_ratings << movie.rating
