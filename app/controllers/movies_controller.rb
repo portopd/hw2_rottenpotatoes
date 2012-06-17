@@ -7,7 +7,8 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    sort_col = params[:sort] # retrieve sort column from additional params hash
+    @movies = Movie.all(:order => sort_col)
   end
 
   def new
