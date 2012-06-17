@@ -7,7 +7,7 @@
     = rating
     - if !(@filter_ratings.index(rating).nil?) then checked = true else checked = false end
     = check_box_tag "ratings[#{rating}]", "1", checked, {:id => "ratings_#{rating}"}
-    = hidden_field_tag "sort", @sort_col
+  = hidden_field_tag "sort", @sort_col
   = submit_tag 'Refresh', :id => "ratings_submit"
 
 %table#movies

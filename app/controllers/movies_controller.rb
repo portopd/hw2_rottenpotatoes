@@ -48,7 +48,7 @@ class MoviesController < ApplicationController
 
   def get_ratings
     @all_ratings = []
-    movies_diff_ratings = Movie.all(:group => "rating")
+    movies_diff_ratings = Movie.find(:all, :group => "rating")
     movies_diff_ratings.each do |movie|
       @all_ratings << movie.rating
     end
